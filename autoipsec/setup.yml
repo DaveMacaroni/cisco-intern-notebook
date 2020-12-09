@@ -1,0 +1,10 @@
+---
+
+- name: Set up IPSec tunnel on VM
+  hosts: local
+  gather_facts: false
+  roles:
+    - role: packages #Install strongswan and traceroute
+    - role: copy #Copy over configuration files
+    - role: vtisetup #Set up Virtual Tunnel Interface 
+    - role: vethsetup #Create client namespace and setup Virtual ETHernet to route all traffic through VTI

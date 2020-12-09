@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+TUNNEL=vti66
+LOCALIP=10.0.0.117 #IP of VM
+REMOTEIP=146.112.66.8 #IP of Umbrella DC
+KEY=66
+IP=0/0
+
+#Add tunnel and set it to up
+ip tunnel add $TUNNEL local $LOCALIP remote $REMOTEIP mode vti key $KEY #Add an E2E VTI connection
+ip link set $TUNNEL up mtu 1420 #Set the VTI up with a Maximum Transmission Unit (largest packet size) of 1420 bytes
+
+#Give it rules and assign it and IP
+ip rule add fwmark $KEY table $KEY #Let stuff with KEY through firewall
+ip rule add iif $TUNNEL table $KEY #Add TUNNEL as the device the packet will arrive on and use table KEY rules
+ip route add $IP dev $TUNNEL table $KEY #Add IP to device TUNNEL
+
+#Set up dummy interface to route packets w/o transmitting them
+ip link add dummy0 type dummy #Dummy is a virtual device that routes packets without transmitting, like loopback (lo)
+sysctl -w "net.ipv4.conf.$TUNNEL.disable_policy=1" #Disable IPSec policy for dummy0 interface
+ip link set dev dummy0 up ; ip address add 192.168.0.66 dev dummy0 #Set dummy0 to up and add an IP to it
+ip rule add from 192.168.0.66 table $KEY pref 4096 #Any traffic from ip uses rules from table 66
+

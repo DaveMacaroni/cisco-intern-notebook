@@ -1,0 +1,36 @@
+---
+- name: Copy ipsec.conf
+  template:
+    src: ipsec.conf.j2
+    dest: /etc/ipsec.conf
+  become: yes
+  notify:
+    - ipsec restart
+
+- name: Copy charon.conf
+  copy:
+    src: charon.conf
+    dest: /etc/strongswan.d/charon.conf
+  become: yes
+  notify:
+    - ipsec restart
+
+- name: Copy ipsec.secrets
+  template:
+    src: ipsec.secrets.j2
+    dest: /etc/ipsec.secrets
+  become: yes
+  notify:
+    - ipsec restart
+
+- name: Change bashrc to show which network you're on
+  copy:
+    src: bashrc
+    dest: ~/.bashrc
+  become: true
+
+- name: Change resolv.conf for some reason to have Cisco IP as nameserver
+  copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+  become: yes
