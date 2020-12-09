@@ -1,0 +1,14 @@
+---
+- name: Copy bash script for tunnel setup
+  copy:
+    src: vtisetup
+    dest: ~/vtisetup
+
+- name: Make vtisetup executable
+  file:
+    path: ~/vtisetup
+    mode: '0750'
+
+- name: Run vtisetup
+  shell: ./vtisetup
+  become: true

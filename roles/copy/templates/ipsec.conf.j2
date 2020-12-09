@@ -1,0 +1,20 @@
+#/etc/ipsec.conf
+config setup
+    # silence all the loggind, we do not need it
+    charondebug="chd -1, ike -1, knl -1, cfg -1, net -1, esp -1, dmn -1, mgr -1"config setup
+config setup
+conn %default
+    keyingtries=%forever
+    keyexchange=ikev2
+conn {{ tunnel_name }}
+    auto=start
+    esp=aes128gcm8!
+    left=%any
+    leftid={{ tunnel_id }}
+    leftauth=psk
+    leftsubnet=0.0.0.0/0
+    right=146.112.66.8 #Got IP from list of Cisco umbrella DC's
+    rightid=cvpn
+    rightsubnet=0.0.0.0/0
+    rightauth=psk
+    mark=66

@@ -1,0 +1,8 @@
+---
+
+- name: Install necessary packages
+  apt:
+    pkg:
+    - strongswan
+    - traceroute
+  become: yes

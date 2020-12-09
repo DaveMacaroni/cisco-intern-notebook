@@ -1,0 +1,14 @@
+---
+- name: Copy bash script for VETH setup
+  copy:
+    src: vethsetup
+    dest: ~/vethsetup
+
+- name: Make vethsetup executable
+  file:
+    path: ~/vethsetup
+    mode: '0750'
+
+- name: Run vethsetup
+  shell: ./vethsetup
+  become: true

@@ -1,0 +1,4 @@
+---
+- name: ipsec restart
+  shell: "ipsec restart"
+  become: true
